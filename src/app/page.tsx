@@ -6,6 +6,8 @@ import ProductGrid from '@/components/ProductGrid'
 import ProductFilters from '@/components/ProductFilters'
 import DemoNotice from '@/components/DemoNotice'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import AdminPanel from '@/components/AdminPanel'
+import AdminToggle from '@/components/AdminToggle'
 import { sampleProducts } from '@/data/sampleProducts'
 
 // Try to import Sanity client, but fallback to sample data if not available
@@ -24,11 +26,12 @@ export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [isUsingDemoData, setIsUsingDemoData] = useState(false)
+  const [isAdminMode, setIsAdminMode] = useState(false)
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     category: '',
     minPrice: 0,
-    maxPrice: 1000,
+    maxPrice: 10000, // Set high initial value, will be updated after products load
     sortBy: 'title-asc'
   })
 
@@ -42,6 +45,16 @@ export default function HomePage() {
           // Try to fetch from Sanity
           const data = await client.fetch(PRODUCTS_QUERY)
           setProducts(data || [])
+          
+          // Update max price filter based on actual product prices
+          if (data && data.length > 0) {
+            const maxProductPrice = Math.max(...data.map((product: Product) => product.price))
+            const roundedMaxPrice = Math.ceil(maxProductPrice)
+            setFilters(prev => ({
+              ...prev,
+              maxPrice: roundedMaxPrice
+            }))
+          }
         } else {
           // Use sample data as fallback
           console.log('Using sample products data')
@@ -52,6 +65,16 @@ export default function HomePage() {
             _id: `sample-${index}`
           }))
           setProducts(productsWithId)
+          
+          // Update max price for sample data
+          if (productsWithId.length > 0) {
+            const maxProductPrice = Math.max(...productsWithId.map((product: any) => product.price))
+            const roundedMaxPrice = Math.ceil(maxProductPrice)
+            setFilters(prev => ({
+              ...prev,
+              maxPrice: roundedMaxPrice
+            }))
+          }
         }
       } catch (error) {
         console.error('Error fetching products, using sample data:', error)
@@ -62,6 +85,16 @@ export default function HomePage() {
           _id: `sample-${index}`
         }))
         setProducts(productsWithId)
+        
+        // Update max price for sample data
+        if (productsWithId.length > 0) {
+          const maxProductPrice = Math.max(...productsWithId.map((product: any) => product.price))
+          const roundedMaxPrice = Math.ceil(maxProductPrice)
+          setFilters(prev => ({
+            ...prev,
+            maxPrice: roundedMaxPrice
+          }))
+        }
       } finally {
         setLoading(false)
       }
@@ -70,9 +103,32 @@ export default function HomePage() {
     fetchProducts()
   }, [])
 
+  // Delete product function
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`/api/products?id=${productId}`, {
+        method: 'DELETE',
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        // Remove product from local state
+        setProducts(prev => prev.filter(product => product._id !== productId))
+        console.log('✅ Product deleted successfully')
+      } else {
+        throw new Error(result.error || 'Failed to delete product')
+      }
+    } catch (error: any) {
+      console.error('❌ Error deleting product:', error)
+      alert(`Error deleting product: ${error.message}`)
+      throw error
+    }
+  }
+
   // Get unique categories
   const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(products.map(product => product.category))]
+    const uniqueCategories = Array.from(new Set(products.map(product => product.category)))
     return uniqueCategories.sort()
   }, [products])
 
@@ -187,9 +243,21 @@ export default function HomePage() {
           </div>
 
           {/* Products Grid */}
-          <ProductGrid products={filteredProducts} loading={loading} />
+          <ProductGrid 
+            products={filteredProducts} 
+            loading={loading}
+            onDeleteProduct={handleDeleteProduct}
+            showDeleteButton={isAdminMode}
+          />
         </div>
       </div>
+      
+      {/* Admin Controls */}
+      <AdminToggle 
+        isAdminMode={isAdminMode}
+        onToggle={setIsAdminMode}
+      />
+      {isAdminMode && <AdminPanel />}
       </div>
     </ErrorBoundary>
   )

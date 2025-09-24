@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
+import { TrashIcon } from '@heroicons/react/24/outline'
 import { ProductCardProps } from '@/types'
 
 // Try to import urlFor, but handle if Sanity is not configured
@@ -10,7 +12,28 @@ try {
   console.log('Sanity not configured, using placeholder images')
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+interface ExtendedProductCardProps extends ProductCardProps {
+  onDelete?: (productId: string) => void
+  showDeleteButton?: boolean
+}
+
+export default function ProductCard({ product, onDelete, showDeleteButton = false }: ExtendedProductCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+
+  const handleDelete = async () => {
+    if (!onDelete) return
+    
+    try {
+      setIsDeleting(true)
+      await onDelete(product._id)
+      setShowConfirmDialog(false)
+    } catch (error) {
+      console.error('Error deleting product:', error)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
   // Handle image URL generation with fallback
   let imageUrl = '/api/placeholder/400/300'
   
@@ -36,7 +59,19 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   
   return (
-    <div className="product-card group">
+    <div className="product-card group relative">
+      {/* Delete Button */}
+      {showDeleteButton && (
+        <button
+          onClick={() => setShowConfirmDialog(true)}
+          disabled={isDeleting}
+          className="absolute top-2 left-2 z-10 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 disabled:opacity-50"
+          title="Delete Product"
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
+      )}
+
       <div className="relative overflow-hidden">
         <Image
           src={imageUrl}
@@ -91,6 +126,36 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
       </div>
+      
+      {/* Delete Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-sm w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Delete Product
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete "{product.title}"? This action cannot be undone.
+            </p>
+            <div className="flex items-center justify-end space-x-3">
+              <button
+                onClick={() => setShowConfirmDialog(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

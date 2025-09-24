@@ -4,9 +4,11 @@ import { Product } from '@/types'
 interface ProductGridProps {
   products: Product[]
   loading?: boolean
+  onDeleteProduct?: (productId: string) => Promise<void>
+  showDeleteButton?: boolean
 }
 
-export default function ProductGrid({ products, loading = false }: ProductGridProps) {
+export default function ProductGrid({ products, loading = false, onDeleteProduct, showDeleteButton = false }: ProductGridProps) {
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -52,7 +54,11 @@ export default function ProductGrid({ products, loading = false }: ProductGridPr
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product, index) => (
         <div key={product._id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-          <ProductCard product={product} />
+          <ProductCard 
+            product={product} 
+            onDelete={onDeleteProduct}
+            showDeleteButton={showDeleteButton}
+          />
         </div>
       ))}
     </div>

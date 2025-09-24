@@ -19,11 +19,13 @@ export default function ProductFilters({ filters, onFiltersChange, categories }:
   }
 
   const resetFilters = () => {
+    // Calculate max price from available products
+    const maxProductPrice = Math.max(1000, filters.maxPrice) // Ensure at least 1000 as fallback
     onFiltersChange({
       search: '',
       category: '',
       minPrice: 0,
-      maxPrice: 1000,
+      maxPrice: maxProductPrice,
       sortBy: 'title-asc'
     })
   }
@@ -108,9 +110,9 @@ export default function ProductFilters({ filters, onFiltersChange, categories }:
                 id="maxPrice"
                 type="number"
                 min="0"
-                placeholder="1000"
+                placeholder={filters.maxPrice?.toString() || "1000"}
                 value={filters.maxPrice || ''}
-                onChange={(e) => handleFilterChange('maxPrice', parseInt(e.target.value) || 1000)}
+                onChange={(e) => handleFilterChange('maxPrice', parseInt(e.target.value) || filters.maxPrice)}
                 className="input-field"
               />
             </div>

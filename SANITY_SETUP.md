@@ -42,6 +42,13 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=your-actual-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 ```
 
+Alternatively, you can set up the environment with our helper script:
+
+```bash
+# Run after updating your project ID in the file
+node switch-dataset.js production
+```
+
 ### Step 5: Deploy Schema to Sanity
 
 From the sanity folder, run:
@@ -138,6 +145,60 @@ Create these sample products in your Sanity Studio:
    - Ensure images are uploaded to Sanity (not just referenced)
    - Check that alt text is provided for images
 
+## � Working with Multiple Datasets
+
+This application supports multiple Sanity datasets for different environments:
+
+### Creating Datasets
+
+Create additional datasets using the management tool:
+
+```bash
+# Create staging dataset
+npm run datasets create staging
+
+# Create development dataset
+npm run datasets create development
+```
+
+### Switching Between Datasets
+
+Easily switch between datasets:
+
+```bash
+# Switch to production
+npm run use-production
+
+# Switch to staging
+npm run use-staging
+
+# Switch to development
+npm run use-development
+```
+
+### Managing Dataset Content
+
+After switching datasets, you can manage content in Sanity Studio:
+
+1. Start Sanity Studio: `npm run sanity-dev`
+2. Navigate to [http://localhost:3333](http://localhost:3333)
+3. Add/edit content in the current dataset
+
+### Copying Data Between Datasets
+
+You can copy data from one dataset to another:
+
+```bash
+# Copy production data to staging for testing
+npm run datasets copy production staging
+
+# List all available datasets
+npm run datasets list
+
+# Show current dataset info
+npm run datasets info
+```
+
 ## 🚀 Quick Commands
 
 ```bash
@@ -145,14 +206,20 @@ Create these sample products in your Sanity Studio:
 npm run dev
 
 # Start Sanity Studio (in separate terminal)
-cd sanity && npm run dev
+npm run sanity-dev
 
 # Deploy schema changes
-cd sanity && npx sanity deploy
+npm run sanity-deploy
 
 # Build for production
 npm run build
 cd sanity && npm run build
+
+# Dataset Management
+npm run datasets list         # List all datasets
+npm run datasets info         # Show current dataset
+npm run datasets create name  # Create new dataset
+npm run datasets copy src dst # Copy data between datasets
 ```
 
 ## ✅ Verification Checklist
@@ -166,6 +233,9 @@ cd sanity && npm run build
 - [ ] Main application shows Sanity data (no demo notice)
 - [ ] Search and filters work with real data
 - [ ] Product detail pages work with real products
+- [ ] Multiple datasets created (production, staging, development)
+- [ ] Dataset switching working properly
+- [ ] Content copied between datasets as needed
 
 ## 🎯 Final Result
 

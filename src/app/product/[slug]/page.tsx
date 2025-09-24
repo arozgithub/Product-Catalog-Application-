@@ -100,7 +100,44 @@ export default function ProductDetailPage() {
     )
   }
 
-  const imageUrl = product.image ? urlFor(product.image).width(800).height(600).url() : '/placeholder-image.jpg'
+  // Handle image URL generation with proper error handling
+  let imageUrl = '/placeholder-image.jpg'
+  
+  if (product.image) {
+    try {
+      // Check if the image has a proper asset reference
+      if (product.image.asset && product.image.asset._ref) {
+        imageUrl = urlFor(product.image).width(800).height(600).url()
+      } else {
+        // Use category-based placeholder if no proper image asset
+        const categoryImages: { [key: string]: string } = {
+          'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=600&fit=crop',
+          'Clothing': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
+          'Home & Garden': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
+          'Sports': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop',
+          'Books': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop',
+          'Beauty': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=600&fit=crop',
+          'Automotive': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+          'Toys & Games': 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=800&h=600&fit=crop'
+        }
+        imageUrl = categoryImages[product.category] || categoryImages['Electronics']
+      }
+    } catch (error) {
+      console.warn('Error generating image URL:', error)
+      // Fallback to category-based image
+      const categoryImages: { [key: string]: string } = {
+        'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&h=600&fit=crop',
+        'Clothing': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=600&fit=crop',
+        'Home & Garden': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
+        'Sports': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop',
+        'Books': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop',
+        'Beauty': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=600&fit=crop',
+        'Automotive': 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+        'Toys & Games': 'https://images.unsplash.com/photo-1558060370-d644479cb6f7?w=800&h=600&fit=crop'
+      }
+      imageUrl = categoryImages[product.category] || categoryImages['Electronics']
+    }
+  }
 
   return (
     <div className="space-y-8">

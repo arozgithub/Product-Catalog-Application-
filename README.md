@@ -131,6 +131,47 @@ The application uses a comprehensive Product schema with the following fields:
 - Availability status
 - Call-to-action buttons
 
+## 📊 Dataset Management
+
+The application supports multiple Sanity datasets for different environments:
+
+### Available Datasets
+- **production**: For live/production data
+- **staging**: For testing before going to production
+- **development**: For local development work
+
+### Switching Datasets
+```bash
+# Switch to production dataset
+npm run use-production
+
+# Switch to staging dataset
+npm run use-staging
+
+# Switch to development dataset
+npm run use-development
+```
+
+### Managing Datasets
+The application includes a dataset management tool:
+
+```bash
+# List all available datasets
+npm run datasets list
+
+# Show current dataset info
+npm run datasets info
+
+# Create a new dataset
+npm run datasets create <dataset-name>
+
+# Delete a dataset (cannot delete production)
+npm run datasets delete <dataset-name>
+
+# Copy data from one dataset to another
+npm run datasets copy <source-dataset> <target-dataset>
+```
+
 ## 🎯 Performance Optimizations
 
 - **Next.js 14**: App Router with server components
