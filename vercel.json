@@ -11,8 +11,8 @@
     }
   },
   "env": {
-    "NEXT_PUBLIC_SANITY_PROJECT_ID": "@sanity_project_id",
-    "NEXT_PUBLIC_SANITY_DATASET": "@sanity_dataset",
-    "SANITY_API_TOKEN": "@sanity_api_token"
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "5fxm68gv",
+    "NEXT_PUBLIC_SANITY_DATASET": "staging",
+    "SANITY_API_TOKEN": "skvz5tq2XewZWSejr8VEJ7OHYZiEpV72DhOMEum7ToX6dJJYcyLC0x3a5RiTcP8TK3WgAHnIFACkrAo9nkhC9zz7tHc11k66fMSGIRvAmfZ2kI73cCdt1vpxHwsLOHFOMDdYjkjgYgcf1fHsVsyn09DtqQ9kHBwa0MWWOG4JwTtYXM0BbRVU"
   }
 }
