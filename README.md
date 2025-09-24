@@ -1,6 +1,35 @@
 # Product Catalog Application
 
-A modern, responsive product catalog application built with Next.js, TypeScript, Sanity CMS, and Tailwind CSS. Features advanced search, filtering, and product detail functionality.
+# 🛍️ Product Catalog Application
+
+A modern, full-stack product catalog application built with Next.js, TypeScript, Tailwind CSS, and Sanity CMS.
+
+## ✨ Features
+
+- **🔍 Advanced Search & Filtering**: Search by title, filter by category and price range
+- **📱 Responsive Design**: Optimized for all device sizes
+- **⚡ Real-time Data**: Powered by Sanity CMS for instant content updates
+- **🛡️ Admin Panel**: Add, edit, and delete products with authentication
+- **🖼️ Image Management**: Upload and manage product images
+- **🚀 Performance Optimized**: Built with Next.js 14 and optimized for production
+
+## 🌐 Live Demo
+
+**🔗 [View Live Application](https://your-app-name.vercel.app)**
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS, Headless UI
+- **CMS**: Sanity Studio
+- **Deployment**: Vercel
+- **Icons**: Heroicons
+
+## 🚀 Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/Product-Catalog-Application-)
+
+For detailed deployment instructions, see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) Features advanced search, filtering, and product detail functionality.
 
 ## 🚀 Features
 

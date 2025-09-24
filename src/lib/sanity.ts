@@ -1,12 +1,21 @@
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
+// Read-only client for public use (no token)
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'your-project-id',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2023-12-01',
   useCdn: true,
-  token: process.env.SANITY_API_TOKEN, // Add token for write operations
+})
+
+// Write client for server-side operations (with token)
+export const writeClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'your-project-id',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2023-12-01',
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN, // Only for server-side
 })
 
 const builder = imageUrlBuilder(client)

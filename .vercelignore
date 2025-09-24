@@ -1,0 +1,14 @@
+# Vercel ignore file
+sanity/
+*.js
+!next.config.js
+*.md
+!README.md
+.env.local
+.env.production.template
+test-*
+debug-*
+check-*
+SETUP.md
+SANITY_*.md
+STATUS.md
