@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizeCss: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -16,6 +19,8 @@ const nextConfig = {
       },
     ],
   },
+  // Ensure CSS is properly handled in production
+  swcMinify: true,
 }
 
 module.exports = nextConfig
